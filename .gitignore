@@ -1,0 +1,69 @@
+# ==========================================
+# Entornos virtuales y paquetes de Python
+# ==========================================
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# ==========================================
+# Base de datos local y variables de entorno
+# ==========================================
+database.db
+*.db
+*.sqlite
+*.sqlite3
+.env
+.env.*
+
+# ==========================================
+# Testing, Cobertura y Linters
+# ==========================================
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+
+# ==========================================
+# Carpetas y archivos de Inteligencia Artificial (IA)
+# ==========================================
+.gemini/
+.agent/
+.agents/
+.claude/
+.cursor/
+.copilot/
+.windsurf/
+.continue/
+.roo/
+.cline/
+.aider*
+.impeccable/
+CLAUDE.md
+GEMINI.md
+AGENTS.md
+.cursorrules
+.windsurfrules
+.clinerules
+
+# ==========================================
+# IDEs y Sistema Operativo
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
