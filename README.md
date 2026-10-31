@@ -8,7 +8,7 @@ El objetivo del trabajo es construir una **API REST** para gestionar el catálog
 
 ## 🛠️ Qué se hizo en este TP
 
-Partiendo de la plantilla didáctica de la cátedra (`clase-1-sqlmodel`), se realizó una refactorización integral:
+Partiendo de la plantilla didáctica de la cátedra (`clase-1-sqlmodel`), el proyecto fue adaptado y estructurado como `TP2-ProgramacionIV-Biblioteca`, realizando una refactorización integral:
 
 1. **Limpieza del proyecto base:** Se eliminaron todos los módulos de ejemplo generales de la clase (`users`, `countries`, `roles`, `permissions`, `middlewares` de conteo y autenticación) para dejar únicamente el dominio de la **Biblioteca**.
 2. **Modelado Relacional con SQLModel (`model/`):**
@@ -27,9 +27,13 @@ Partiendo de la plantilla didáctica de la cátedra (`clase-1-sqlmodel`), se rea
 ## 📂 Estructura del Proyecto
 
 ```text
-clase-1-sqlmodel/
+TP2-ProgramacionIV-Biblioteca/
 ├── api/                        # Controladores HTTP (Routers) y DTOs
 │   ├── model/                  # Esquemas Request / Response (autores, libros, socios, prestamos)
+│   │   ├── autores.py
+│   │   ├── libros.py
+│   │   ├── prestamos.py
+│   │   └── socios.py
 │   ├── autores.py              # Endpoints CRUD de /autores
 │   ├── libros.py               # Endpoints CRUD de /libros, filtro disponibles y relación N-N con autores
 │   ├── socios.py               # Endpoints CRUD de /socios y consulta de préstamos por socio
@@ -53,10 +57,18 @@ clase-1-sqlmodel/
 │   └── prestamos.py            # PrestamoServiceInterface / PrestamoService
 ├── tests/                      # Suite de pruebas automatizadas (44 tests)
 │   ├── api/                    # Tests de integración por cada router y regla de negocio
+│   │   ├── test_autores.py
+│   │   ├── test_libros.py
+│   │   ├── test_prestamos.py
+│   │   ├── test_seed.py
+│   │   └── test_socios.py
 │   ├── services/               # Tests unitarios directos sobre la capa services
+│   │   └── test_prestamos_service.py
 │   └── conftest.py             # Fixtures (SQLite en memoria con StaticPool y TestClient)
 ├── dependencies.py             # Inyección de dependencias centralizada (Annotated + Depends)
-├── main.py                     # Inicialización de FastAPI, lifespan y registro de routers
+├── main.py                     # Inicialización de FastAPI, evento startup y registro de routers
+├── pyproject.toml              # Configuración de linter (Ruff) y Pyright
+├── README.md                   # Documentación completa del proyecto
 └── TP2-fastapi-biblioteca.md   # Consignas originales del Trabajo Práctico
 ```
 
@@ -128,8 +140,8 @@ Requisitos previos: tener instalado **Python 3.11 o superior** y **Git**.
 
 #### 1. Clonar el repositorio y entrar a la carpeta
 ```powershell
-git clone <URL_DEL_REPOSITORIO>
-cd clase-1-sqlmodel
+git clone https://github.com/EliseoUlrich/TP2-ProgramacionIV-Biblioteca.git
+cd TP2-ProgramacionIV-Biblioteca
 ```
 
 #### 2. Crear y activar el entorno virtual
@@ -162,8 +174,8 @@ uvicorn main:app --reload
 
 #### 1. Clonar el repositorio y entrar a la carpeta
 ```bash
-git clone <URL_DEL_REPOSITORIO>
-cd clase-1-sqlmodel
+git clone https://github.com/EliseoUlrich/TP2-ProgramacionIV-Biblioteca.git
+cd TP2-ProgramacionIV-Biblioteca
 ```
 
 #### 2. Crear y activar el entorno virtual
@@ -204,19 +216,25 @@ La suite de pruebas utiliza **pytest** junto con una base de datos **SQLite en m
 ### Cómo correr los tests
 
 - **En Windows:**
+  Con el entorno virtual activado:
+  ```powershell
+  pytest -v
+  pytest --cov=. --cov-report=term-missing
+  ```
+  O invocando directamente el ejecutable del entorno virtual:
   ```powershell
   .\.venv\Scripts\python -m pytest -v
-  ```
-  Para ver el reporte de cobertura:
-  ```powershell
   .\.venv\Scripts\python -m pytest --cov=. --cov-report=term-missing
   ```
 
 - **En Linux / macOS:**
+  Con el entorno virtual activado:
+  ```bash
+  pytest -v
+  pytest --cov=. --cov-report=term-missing
+  ```
+  O invocando directamente el ejecutable del entorno virtual:
   ```bash
   .venv/bin/pytest -v
-  ```
-  Para ver el reporte de cobertura:
-  ```bash
   .venv/bin/pytest --cov=. --cov-report=term-missing
   ```
