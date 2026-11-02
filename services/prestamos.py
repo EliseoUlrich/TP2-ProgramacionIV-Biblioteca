@@ -124,6 +124,11 @@ class PrestamoService(PrestamoServiceInterface):
 
         # Regla 5: Al devolver se repone el stock y se calcula la multa: $100 × días de atraso (0 si llegó a tiempo)
         fecha_dev = fecha_devolucion or date.today()
+        if fecha_dev < prestamo.fecha_prestamo:
+            raise HTTPException(
+                status_code=422,
+                detail="La fecha de devolución no puede ser anterior a la fecha de préstamo",
+            )
         dias_atraso = max(0, (fecha_dev - prestamo.fecha_vencimiento).days)
         multa = dias_atraso * MULTA_POR_DIA
 

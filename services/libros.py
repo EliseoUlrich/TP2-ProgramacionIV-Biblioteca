@@ -4,7 +4,7 @@ from typing import Annotated
 
 from fastapi import HTTPException, Query
 
-from dependencies import AutorRepositoryDep, LibroRepositoryDep
+from dependencies import AutorRepositoryDep, LibroRepositoryDep, PrestamoRepositoryDep
 from model.libros import Libro, LibroBase
 
 
@@ -32,9 +32,15 @@ class LibroServiceInterface(ABC):
 
 
 class LibroService(LibroServiceInterface):
-    def __init__(self, repo: LibroRepositoryDep, autor_repo: AutorRepositoryDep):
+    def __init__(
+        self,
+        repo: LibroRepositoryDep,
+        autor_repo: AutorRepositoryDep,
+        prestamo_repo: PrestamoRepositoryDep,
+    ):
         self.repo = repo
         self.autor_repo = autor_repo
+        self.prestamo_repo = prestamo_repo
 
     def get_libros(
         self,
@@ -67,6 +73,11 @@ class LibroService(LibroServiceInterface):
     def delete_libro(self, libro_id: int) -> None:
         if not self.repo.get_by_id(libro_id):
             raise HTTPException(status_code=404, detail="Libro no encontrado")
+        if self.prestamo_repo.fetch_by_libro(libro_id, activos=True):
+            raise HTTPException(
+                status_code=409,
+                detail="No se puede eliminar un libro con préstamos activos",
+            )
         self.repo.delete_libro(libro_id)
 
     def asociar_autor(self, libro_id: int, autor_id: int) -> Libro:

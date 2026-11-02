@@ -55,7 +55,7 @@ TP2-ProgramacionIV-Biblioteca/
 │   ├── libros.py               # LibroServiceInterface / LibroService
 │   ├── socios.py               # SocioServiceInterface / SocioService
 │   └── prestamos.py            # PrestamoServiceInterface / PrestamoService
-├── tests/                      # Suite de pruebas automatizadas (44 tests)
+├── tests/                      # Suite de pruebas automatizadas (47 tests)
 │   ├── api/                    # Tests de integración por cada router y regla de negocio
 │   │   ├── test_autores.py
 │   │   ├── test_libros.py
@@ -68,6 +68,7 @@ TP2-ProgramacionIV-Biblioteca/
 ├── dependencies.py             # Inyección de dependencias centralizada (Annotated + Depends)
 ├── main.py                     # Inicialización de FastAPI, evento startup y registro de routers
 ├── pyproject.toml              # Configuración de linter (Ruff) y Pyright
+├── requirements.txt            # Dependencias del proyecto
 ├── README.md                   # Documentación completa del proyecto
 └── TP2-fastapi-biblioteca.md   # Consignas originales del Trabajo Práctico
 ```
@@ -160,7 +161,7 @@ cd TP2-ProgramacionIV-Biblioteca
 
 #### 3. Instalar las dependencias
 ```powershell
-pip install fastapi "uvicorn[standard]" sqlmodel "pydantic[email]" httpx pytest pytest-cov
+pip install -r requirements.txt
 ```
 
 #### 4. Levantar el servidor de desarrollo
@@ -186,7 +187,7 @@ source .venv/bin/activate
 
 #### 3. Instalar las dependencias
 ```bash
-pip install fastapi "uvicorn[standard]" sqlmodel "pydantic[email]" httpx pytest pytest-cov
+pip install -r requirements.txt
 ```
 
 #### 4. Levantar el servidor de desarrollo
@@ -210,8 +211,8 @@ Una vez iniciado el servidor (en cualquier sistema operativo), abre tu navegador
 La suite de pruebas utiliza **pytest** junto con una base de datos **SQLite en memoria** (`StaticPool`), garantizando que cada test corra en un entorno limpio e independiente sin modificar `database.db`.
 
 > **Nota sobre la autoría de los tests:**  
-> Para este trabajo práctico **hice 10 tests a mano** cubriendo los casos principales de las reglas de negocio y el flujo de préstamos, y **le pedí a la IA que genere el resto de los tests** (34 pruebas adicionales) para cubrir de forma exhaustiva todas las ramas de error (`403`, `404`, `409`, `422`), operaciones CRUD, idempotencia del seed y pruebas unitarias de la capa `services`.  
-> En total la suite cuenta con **44 tests** y alcanza un **99.9% de cobertura de código** (superando ampliamente el mínimo del 80% requerido en la consigna).
+> Para este trabajo práctico **hice 10 tests a mano** cubriendo los casos principales de las reglas de negocio y el flujo de préstamos, y **le pedí a la IA que genere el resto de los tests** (37 pruebas adicionales) para cubrir de forma exhaustiva todas las ramas de error (`403`, `404`, `409`, `422`), operaciones CRUD, idempotencia del seed y pruebas unitarias de la capa `services`.  
+> En total la suite cuenta con **47 tests** y alcanza un **99.9% de cobertura de código** (superando ampliamente el mínimo del 80% requerido en la consigna).
 
 ### Cómo correr los tests
 

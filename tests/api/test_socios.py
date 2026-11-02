@@ -57,3 +57,15 @@ def test_delete_socio_ok_and_not_found(client, seed):
     assert client.get("/socios/3").status_code == 404
     assert client.delete("/socios/999").status_code == 404
 
+
+def test_delete_socio_con_prestamo_activo_409(client, seed):
+    res_prestamo = client.post("/prestamos", json={"socio_id": 1, "libro_id": 1})
+    prestamo_id = res_prestamo.json()["id"]
+
+    # Mientras el socio tenga préstamos activos no se puede borrar
+    assert client.delete("/socios/1").status_code == 409
+
+    # Una vez devuelto el préstamo, sí se permite borrar al socio
+    client.post(f"/prestamos/{prestamo_id}/devolucion")
+    assert client.delete("/socios/1").status_code == 200
+

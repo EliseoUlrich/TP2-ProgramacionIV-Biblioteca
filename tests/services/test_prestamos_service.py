@@ -36,6 +36,12 @@ def test_service_reglas_negocio_en_capa_services(session: Session, seed):
         service.devolver_prestamo(prestamo.id)  # type: ignore[arg-type]
     assert exc.value.status_code == 409
 
+    # Consulta de préstamos por libro (todos, activos e inactivos)
+    prestamo_repo = PrestamoRepository(session)
+    assert len(prestamo_repo.fetch_by_libro(1)) == 1
+    assert len(prestamo_repo.fetch_by_libro(1, activos=True)) == 0
+    assert len(prestamo_repo.fetch_by_libro(1, activos=False)) == 1
+
 
 def test_service_libro_isbn_duplicado(session: Session, seed):
     from model.libros import LibroBase
@@ -43,6 +49,7 @@ def test_service_libro_isbn_duplicado(session: Session, seed):
     libro_service = LibroService(
         repo=LibroRepository(session),
         autor_repo=AutorRepository(session),
+        prestamo_repo=PrestamoRepository(session),
     )
     with pytest.raises(HTTPException) as exc:
         libro_service.create_libro(

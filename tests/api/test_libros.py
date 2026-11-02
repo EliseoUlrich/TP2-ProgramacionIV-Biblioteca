@@ -86,6 +86,18 @@ def test_delete_libro_ok_and_not_found(client, seed):
     assert client.delete("/libros/999").status_code == 404
 
 
+def test_delete_libro_con_prestamo_activo_409(client, seed):
+    res_prestamo = client.post("/prestamos", json={"socio_id": 1, "libro_id": 1})
+    prestamo_id = res_prestamo.json()["id"]
+
+    # Mientras el préstamo esté activo no se puede borrar el libro
+    assert client.delete("/libros/1").status_code == 409
+
+    # Una vez devuelto el libro, sí se permite borrarlo
+    client.post(f"/prestamos/{prestamo_id}/devolucion")
+    assert client.delete("/libros/1").status_code == 200
+
+
 def test_asociar_y_desasociar_autor_a_libro(client, seed):
     # Libro 1 ya tiene al autor 1; asociamos también al autor 3
     res = client.post("/libros/1/autores/3")

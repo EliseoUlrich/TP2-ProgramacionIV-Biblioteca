@@ -37,6 +37,18 @@ class PrestamoRepository:
             statement = statement.where(col(Prestamo.fecha_devolucion).is_not(None))
         return self.session.exec(statement).all()
 
+    def fetch_by_libro(
+        self,
+        libro_id: int,
+        activos: bool | None = None,
+    ) -> Sequence[Prestamo]:
+        statement = select(Prestamo).where(col(Prestamo.libro_id) == libro_id)
+        if activos is True:
+            statement = statement.where(col(Prestamo.fecha_devolucion).is_(None))
+        elif activos is False:
+            statement = statement.where(col(Prestamo.fecha_devolucion).is_not(None))
+        return self.session.exec(statement).all()
+
     def create_prestamo(self, prestamo_base: PrestamoBase, libro: Libro) -> Prestamo:
         libro.stock -= 1
         prestamo = Prestamo(

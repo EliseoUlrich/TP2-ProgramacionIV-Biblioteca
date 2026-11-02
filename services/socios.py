@@ -4,7 +4,7 @@ from typing import Annotated
 
 from fastapi import HTTPException, Query
 
-from dependencies import SocioRepositoryDep
+from dependencies import PrestamoRepositoryDep, SocioRepositoryDep
 from model.socios import Socio, SocioBase
 
 
@@ -26,8 +26,13 @@ class SocioServiceInterface(ABC):
 
 
 class SocioService(SocioServiceInterface):
-    def __init__(self, repo: SocioRepositoryDep):
+    def __init__(
+        self,
+        repo: SocioRepositoryDep,
+        prestamo_repo: PrestamoRepositoryDep,
+    ):
         self.repo = repo
+        self.prestamo_repo = prestamo_repo
 
     def get_socios(
         self,
@@ -59,4 +64,9 @@ class SocioService(SocioServiceInterface):
     def delete_socio(self, socio_id: int) -> None:
         if not self.repo.get_by_id(socio_id):
             raise HTTPException(status_code=404, detail="Socio no encontrado")
+        if self.prestamo_repo.fetch_by_socio(socio_id, activos=True):
+            raise HTTPException(
+                status_code=409,
+                detail="No se puede eliminar un socio con préstamos activos",
+            )
         self.repo.delete_socio(socio_id)

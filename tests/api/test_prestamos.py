@@ -101,6 +101,22 @@ def test_regla_6_no_se_puede_devolver_prestamo_ya_devuelto_409(client, seed):
     assert res_segunda.status_code == 409
 
 
+def test_devolucion_fecha_anterior_a_prestamo_422(client, seed):
+    res_prestamo = client.post(
+        "/prestamos",
+        json={"socio_id": 1, "libro_id": 1, "fecha_prestamo": "2026-03-10"},
+    )
+    prestamo_id = res_prestamo.json()["id"]
+
+    res_dev = client.post(
+        f"/prestamos/{prestamo_id}/devolucion",
+        json={"fecha_devolucion": "2026-03-05"},
+    )
+    assert res_dev.status_code == 422
+    # El stock no se repone porque la devolución fue rechazada
+    assert client.get("/libros/1").json()["stock"] == 2
+
+
 def test_regla_7_recursos_inexistentes_en_prestamos_404(client, seed):
     # Socio inexistente al prestar
     assert client.post("/prestamos", json={"socio_id": 999, "libro_id": 1}).status_code == 404
